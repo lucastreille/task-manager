@@ -7,6 +7,7 @@
 
     <nav class="links">
       <ng-container *ngIf="isLoggedIn(); else loggedOut">
+        <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
         <a routerLink="/tasks" routerLinkActive="active">Tasks</a>
 
         <div class="spacer"></div>
