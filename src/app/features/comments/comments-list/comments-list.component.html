@@ -1,0 +1,45 @@
+<section class="comments-section">
+  <h3 class="comments-title">💬 Commentaires</h3>
+
+  <!-- Liste des commentaires -->
+  <div class="comments-list">
+    @if (taskComments().length === 0) {
+      <p class="no-comments">Aucun commentaire pour le moment. Soyez le premier à commenter !</p>
+    } @else {
+      @for (comment of taskComments(); track comment.id) {
+        <article class="comment-card">
+          <div class="comment-header">
+            <span class="comment-author">{{ comment.author }}</span>
+            <time class="comment-date">{{ comment.createdAt | date:'dd/MM/yyyy à HH:mm' }}</time>
+          </div>
+          <p class="comment-message">{{ comment.message }}</p>
+        </article>
+      }
+    }
+  </div>
+
+  <!-- Formulaire d'ajout -->
+  <form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="comment-form">
+    <div class="form-group">
+      <label for="commentMessage" class="visually-hidden">Votre commentaire</label>
+      <textarea
+        id="commentMessage"
+        formControlName="message"
+        placeholder="Écrire un commentaire..."
+        rows="3"
+        class="comment-textarea"
+      ></textarea>
+    </div>
+
+    <div class="form-actions">
+      <span class="current-user">Connecté en tant que : <strong>{{ currentUsername() }}</strong></span>
+      <button
+        type="submit"
+        [disabled]="commentForm.invalid"
+        class="btn-submit"
+      >
+        Envoyer
+      </button>
+    </div>
+  </form>
+</section>

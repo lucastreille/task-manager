@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TasksService } from '../../../../core/tasks/services/tasks.service';
 import { Task } from '../../../../core/models/task.model';
+import { CommentsListComponent } from '../../../comments/comments-list/comments-list.component';
 
 @Component({
   selector: 'app-task-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, CommentsListComponent],
   templateUrl: './task-detail.component.html',
 })
 export class TaskDetailComponent {
