@@ -1,0 +1,46 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>Connexion</h1>
+      <p>Content de te revoir</p>
+    </div>
+
+    <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label for="username">Nom d’utilisateur</label>
+        <input id="username" type="text" formControlName="username" placeholder="ex: lucas" />
+
+        @if (form.get('username')?.touched && form.get('username')?.hasError('required')) {
+          <small class="field-error">Email/Username requis.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Mot de passe</label>
+        <input id="password" type="password" formControlName="password" placeholder="••••••••" />
+
+        @if (form.get('password')?.touched && form.get('password')?.hasError('required')) {
+          <small class="field-error">Mot de passe requis.</small>
+        }
+        @if (form.get('password')?.touched && form.get('password')?.hasError('minlength')) {
+          <small class="field-error">Mot de passe trop court (min 6).</small>
+        }
+      </div>
+
+      @if (error) {
+        <div class="alert">
+          <span class="dot"></span>
+          <span>{{ error }}</span>
+        </div>
+      }
+
+      <!-- ✅ pas de disabled : on affiche les erreurs -->
+      <button class="btn-primary" type="submit">Se connecter</button>
+    </form>
+
+    <div class="auth-footer">
+      <span>Pas encore inscrit ?</span>
+      <a routerLink="/register">S’inscrire</a>
+    </div>
+  </div>
+</div>

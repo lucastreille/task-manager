@@ -1,0 +1,51 @@
+<div class="page">
+  <div class="page__header">
+    <div>
+      <h1 *ngIf="!isEdit()">Nouvelle tâche</h1>
+      <h1 *ngIf="isEdit()">Modifier la tâche</h1>
+      <p>Admin : assignation via targetUserId / User : tâche pour soi</p>
+    </div>
+
+    <a class="link" routerLink="/tasks">← Retour</a>
+  </div>
+
+  <div class="alert" *ngIf="error()">
+    <span class="dot"></span>
+    <span>{{ error() }}</span>
+  </div>
+
+  <form class="card form" [formGroup]="form" (ngSubmit)="submit()">
+    <label>
+      Titre
+      <input type="text" formControlName="title" placeholder="Ex: Apprendre NestJS" />
+    </label>
+
+    <label>
+      Description
+      <textarea rows="4" formControlName="description" placeholder="Optionnel…"></textarea>
+    </label>
+
+    <label>
+      Statut
+      <select formControlName="status">
+        <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+      </select>
+    </label>
+
+    <ng-container *ngIf="isAdmin()">
+      <label>
+        Assigner à (Admin)
+        <select formControlName="targetUserId">
+          <option [ngValue]="null">Moi (par défaut)</option>
+          <option *ngFor="let u of users()" [ngValue]="u.id">
+            {{ u.username }} ({{ u.role }})
+          </option>
+        </select>
+      </label>
+    </ng-container>
+
+    <button class="btn" type="submit" [disabled]="form.invalid">
+      Enregistrer
+    </button>
+  </form>
+</div>

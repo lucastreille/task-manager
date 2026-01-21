@@ -1,0 +1,32 @@
+<header class="nav">
+  <div class="nav__inner">
+    <a class="brand" routerLink="/tasks">
+      <span class="brand__dot"></span>
+      <span class="brand__text">Task Manager</span>
+    </a>
+
+    <nav class="links">
+      <ng-container *ngIf="isLoggedIn(); else loggedOut">
+        <a routerLink="/tasks" routerLinkActive="active">Tasks</a>
+
+        <div class="spacer"></div>
+
+        <div class="user">
+          <span class="user__pill" title="Compte">
+            Bonjour, <strong>{{ displayName() }}</strong>
+          </span>
+
+          <button class="btn" type="button" (click)="logout()">
+            Logout
+          </button>
+        </div>
+      </ng-container>
+
+      <ng-template #loggedOut>
+        <div class="spacer"></div>
+        <a routerLink="/login" routerLinkActive="active">Login</a>
+        <a class="cta" routerLink="/register" routerLinkActive="active">Register</a>
+      </ng-template>
+    </nav>
+  </div>
+</header>

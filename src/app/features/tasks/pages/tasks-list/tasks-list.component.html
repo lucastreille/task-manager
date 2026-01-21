@@ -1,0 +1,177 @@
+<div class="page">
+  <div class="page__header">
+    <div>
+      <h1 class="page__title">Mes tâches</h1>
+      <p class="page__subtitle">Board collaboratif (API connectée)</p>
+    </div>
+
+    <a class="btn btn--primary" routerLink="/tasks/new">+ Nouvelle tâche</a>
+  </div>
+
+  @if (error()) {
+    <div class="alert">{{ error() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="skeleton">Chargement…</div>
+  }
+
+  @if (!loading()) {
+    <div class="board">
+      <!-- TODO -->
+      <section class="col">
+        <header class="col__header">
+          <div class="col__title">
+            <span class="dot dot--todo"></span>
+            <span>À faire</span>
+          </div>
+          <span class="count">{{ pendingTasks().length }}</span>
+        </header>
+
+        <div class="col__body">
+          @if (pendingTasks().length === 0) {
+            <div class="empty">Aucune tâche.</div>
+          }
+
+          @for (t of pendingTasks(); track trackById($index, t)) {
+            <article class="card">
+              <div class="card__top">
+                <a
+                  class="card__title"
+                  [routerLink]="['/tasks', t.id]"
+                  [class.card__title--done]="t.status === 'DONE'"
+                >
+                  {{ t.title }}
+                </a>
+
+                <span [class]="badgeClass('PENDING')">PENDING</span>
+              </div>
+
+              @if (t.description) {
+                <p class="card__desc">{{ t.description }}</p>
+              }
+
+              <div class="meta">
+                <span class="meta__line">Assigné à : <strong>{{ t.user.username }}</strong></span>
+                <span class="meta__line">
+                  Créée : {{ t.createdAt | date:'dd/MM/yyyy HH:mm' }}
+                  <span class="sep"><br/></span>
+                  Modifiée : {{ t.updatedAt | date:'dd/MM/yyyy HH:mm' }}
+                </span>
+              </div>
+
+              <div class="actions">
+                <a class="link" [routerLink]="['/tasks', t.id]">Voir</a>
+                <a class="link" [routerLink]="['/tasks', t.id, 'edit']">Modifier</a>
+                <button class="link link--danger" type="button" (click)="delete(t.id)">Supprimer</button>
+              </div>
+            </article>
+          }
+        </div>
+      </section>
+
+      <!-- IN PROGRESS -->
+      <section class="col">
+        <header class="col__header">
+          <div class="col__title">
+            <span class="dot dot--progress"></span>
+            <span>En cours</span>
+          </div>
+          <span class="count">{{ inProgressTasks().length }}</span>
+        </header>
+
+        <div class="col__body">
+          @if (inProgressTasks().length === 0) {
+            <div class="empty">Aucune tâche.</div>
+          }
+
+          @for (t of inProgressTasks(); track trackById($index, t)) {
+            <article class="card">
+              <div class="card__top">
+                <a
+                  class="card__title"
+                  [routerLink]="['/tasks', t.id]"
+                  [class.card__title--done]="t.status === 'DONE'"
+                >
+                  {{ t.title }}
+                </a>
+
+                <span [class]="badgeClass('IN_PROGRESS')">IN_PROGRESS</span>
+              </div>
+
+              @if (t.description) {
+                <p class="card__desc">{{ t.description }}</p>
+              }
+
+              <div class="meta">
+                <span class="meta__line">Assigné à : <strong>{{ t.user.username }}</strong></span>
+                <span class="meta__line">
+                  Créée : {{ t.createdAt | date:'dd/MM/yyyy HH:mm' }}
+                  <span class="sep"><br/></span>
+                  Modifiée : {{ t.updatedAt | date:'dd/MM/yyyy HH:mm' }}
+                </span>
+              </div>
+
+              <div class="actions">
+                <a class="link" [routerLink]="['/tasks', t.id]">Voir</a>
+                <a class="link" [routerLink]="['/tasks', t.id, 'edit']">Modifier</a>
+                <button class="link link--danger" type="button" (click)="delete(t.id)">Supprimer</button>
+              </div>
+            </article>
+          }
+        </div>
+      </section>
+
+      <!-- DONE -->
+      <section class="col">
+        <header class="col__header">
+          <div class="col__title">
+            <span class="dot dot--done"></span>
+            <span>Terminé</span>
+          </div>
+          <span class="count">{{ doneTasks().length }}</span>
+        </header>
+
+        <div class="col__body">
+          @if (doneTasks().length === 0) {
+            <div class="empty">Aucune tâche.</div>
+          }
+
+          @for (t of doneTasks(); track trackById($index, t)) {
+            <article class="card">
+              <div class="card__top">
+                <a
+                  class="card__title card__title--done"
+                  [routerLink]="['/tasks', t.id]"
+                >
+                  {{ t.title }}
+                </a>
+
+                <span [class]="badgeClass('DONE')">DONE</span>
+              </div>
+
+              @if (t.description) {
+                <p class="card__desc">{{ t.description }}</p>
+              }
+
+              <div class="meta">
+                <span class="meta__line">Assigné à : <strong>{{ t.user.username }}</strong></span>
+                <span class="meta__line">
+                  Créée : {{ t.createdAt | date:'dd/MM/yyyy HH:mm' }}
+                  <span class="sep"><br/></span>
+                  Modifiée : {{ t.updatedAt | date:'dd/MM/yyyy HH:mm' }}
+                </span>
+              </div>
+
+              <div class="actions">
+                <a class="link" [routerLink]="['/tasks', t.id]">Voir</a>
+                <a class="link" [routerLink]="['/tasks', t.id, 'edit']">Modifier</a>
+                <button class="link link--danger" type="button" (click)="delete(t.id)">Supprimer</button>
+              </div>
+            </article>
+          }
+        </div>
+      </section>
+    </div>
+  }
+</div>

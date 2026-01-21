@@ -1,0 +1,57 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>Créer un compte</h1>
+      <p>Rejoins Task Manager en 30 secondes ✨</p>
+    </div>
+
+    <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label for="username">Nom d’utilisateur</label>
+        <input id="username" type="text" formControlName="username" placeholder="ex: lucas" />
+
+        @if (form.get('username')?.touched && form.get('username')?.hasError('required')) {
+          <small class="field-error">Email/Username requis.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Mot de passe</label>
+        <input id="password" type="password" formControlName="password" placeholder="••••••••" />
+
+        @if (form.get('password')?.touched && form.get('password')?.hasError('required')) {
+          <small class="field-error">Mot de passe requis.</small>
+        }
+        @if (form.get('password')?.touched && form.get('password')?.hasError('minlength')) {
+          <small class="field-error">Mot de passe trop court (min 6).</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="role">Rôle</label>
+        <select id="role" formControlName="role">
+          <option [ngValue]="ROLE.USER">USER</option>
+          <option [ngValue]="ROLE.ADMIN">ADMIN</option>
+        </select>
+
+        @if (form.get('role')?.touched && form.get('role')?.hasError('required')) {
+          <small class="field-error">Rôle requis.</small>
+        }
+      </div>
+
+      @if (error) {
+        <div class="alert">
+          <span class="dot"></span>
+          <span>{{ error }}</span>
+        </div>
+      }
+
+      <button class="btn-primary" type="submit">Créer le compte</button>
+    </form>
+
+    <div class="auth-footer">
+      <span>Déjà un compte ?</span>
+      <a routerLink="/login">Se connecter</a>
+    </div>
+  </div>
+</div>
