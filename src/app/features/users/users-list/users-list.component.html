@@ -1,0 +1,62 @@
+<div class="page">
+  <div class="page__header">
+    <div>
+      <h1 class="page__title">Gestion des utilisateurs</h1>
+      <p class="page__subtitle">Administration des comptes</p>
+    </div>
+  </div>
+
+  @if (successMessage()) {
+    <div class="alert alert--success">{{ successMessage() }}</div>
+  }
+
+  @if (error()) {
+    <div class="alert alert--error">{{ error() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="skeleton">Chargement…</div>
+  }
+
+  @if (!loading() && users().length === 0 && !error()) {
+    <div class="empty">Aucun utilisateur trouvé.</div>
+  }
+
+  @if (!loading() && users().length > 0) {
+    <div class="table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nom d'utilisateur</th>
+            <th>Rôle</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users(); track trackById($index, user)) {
+            <tr>
+              <td class="table__id">{{ user.id }}</td>
+              <td class="table__username">{{ user.username }}</td>
+              <td>
+                <span [class]="roleClass(user.role)">{{ user.role }}</span>
+              </td>
+              <td>
+                @if (user.role !== 'ADMIN') {
+                  <button
+                    type="button"
+                    class="btn btn--danger"
+                    (click)="banUser(user)">
+                    Bannir
+                  </button>
+                } @else {
+                  <span class="text-muted">—</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
