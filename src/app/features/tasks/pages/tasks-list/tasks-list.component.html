@@ -4,8 +4,34 @@
       <h1 class="page__title">Mes tâches</h1>
       <p class="page__subtitle">Board collaboratif (API connectée)</p>
     </div>
-
     <a class="btn btn--primary" routerLink="/tasks/new">+ Nouvelle tâche</a>
+  </div>
+
+  <div class="filter-bar">
+    <span class="filter-bar__label">Filtrer :</span>
+    <div class="filter-bar__buttons">
+      <button
+        type="button"
+        class="filter-btn"
+        [class.filter-btn--active]="activeFilter() === 'ALL'"
+        (click)="setFilter('ALL')">
+        Toutes
+      </button>
+      <button
+        type="button"
+        class="filter-btn"
+        [class.filter-btn--active]="activeFilter() === 'PENDING'"
+        (click)="setFilter('PENDING')">
+        À faire
+      </button>
+      <button
+        type="button"
+        class="filter-btn"
+        [class.filter-btn--active]="activeFilter() === 'DONE'"
+        (click)="setFilter('DONE')">
+        Terminées
+      </button>
+    </div>
   </div>
 
   @if (error()) {
@@ -18,7 +44,6 @@
 
   @if (!loading()) {
     <div class="board">
-      <!-- TODO -->
       <section class="col">
         <header class="col__header">
           <div class="col__title">
@@ -33,44 +58,38 @@
             <div class="empty">Aucune tâche.</div>
           }
 
-          @for (t of pendingTasks(); track trackById($index, t)) {
+          @for (task of pendingTasks(); track trackById($index, task)) {
             <article class="card">
               <div class="card__top">
-                <a
-                  class="card__title"
-                  [routerLink]="['/tasks', t.id]"
-                  [class.card__title--done]="t.status === 'DONE'"
-                >
-                  {{ t.title }}
+                <a class="card__title" [routerLink]="['/tasks', task.id]">
+                  {{ task.title }}
                 </a>
-
                 <span [class]="badgeClass('PENDING')">PENDING</span>
               </div>
 
-              @if (t.description) {
-                <p class="card__desc">{{ t.description }}</p>
+              @if (task.description) {
+                <p class="card__desc">{{ task.description }}</p>
               }
 
               <div class="meta">
-                <span class="meta__line">Assigné à : <strong>{{ t.user.username }}</strong></span>
+                <span class="meta__line">Assigné à : <strong>{{ task.user.username }}</strong></span>
                 <span class="meta__line">
-                  Créée : {{ t.createdAt | date:'dd/MM/yyyy HH:mm' }}
+                  Créée : {{ task.createdAt | date:'dd/MM/yyyy HH:mm' }}
                   <span class="sep"><br/></span>
-                  Modifiée : {{ t.updatedAt | date:'dd/MM/yyyy HH:mm' }}
+                  Modifiée : {{ task.updatedAt | date:'dd/MM/yyyy HH:mm' }}
                 </span>
               </div>
 
               <div class="actions">
-                <a class="link" [routerLink]="['/tasks', t.id]">Voir</a>
-                <a class="link" [routerLink]="['/tasks', t.id, 'edit']">Modifier</a>
-                <button class="link link--danger" type="button" (click)="delete(t.id)">Supprimer</button>
+                <a class="link" [routerLink]="['/tasks', task.id]">Voir</a>
+                <a class="link" [routerLink]="['/tasks', task.id, 'edit']">Modifier</a>
+                <button class="link link--danger" type="button" (click)="delete(task.id)">Supprimer</button>
               </div>
             </article>
           }
         </div>
       </section>
 
-      <!-- IN PROGRESS -->
       <section class="col">
         <header class="col__header">
           <div class="col__title">
@@ -85,44 +104,38 @@
             <div class="empty">Aucune tâche.</div>
           }
 
-          @for (t of inProgressTasks(); track trackById($index, t)) {
+          @for (task of inProgressTasks(); track trackById($index, task)) {
             <article class="card">
               <div class="card__top">
-                <a
-                  class="card__title"
-                  [routerLink]="['/tasks', t.id]"
-                  [class.card__title--done]="t.status === 'DONE'"
-                >
-                  {{ t.title }}
+                <a class="card__title" [routerLink]="['/tasks', task.id]">
+                  {{ task.title }}
                 </a>
-
                 <span [class]="badgeClass('IN_PROGRESS')">IN_PROGRESS</span>
               </div>
 
-              @if (t.description) {
-                <p class="card__desc">{{ t.description }}</p>
+              @if (task.description) {
+                <p class="card__desc">{{ task.description }}</p>
               }
 
               <div class="meta">
-                <span class="meta__line">Assigné à : <strong>{{ t.user.username }}</strong></span>
+                <span class="meta__line">Assigné à : <strong>{{ task.user.username }}</strong></span>
                 <span class="meta__line">
-                  Créée : {{ t.createdAt | date:'dd/MM/yyyy HH:mm' }}
+                  Créée : {{ task.createdAt | date:'dd/MM/yyyy HH:mm' }}
                   <span class="sep"><br/></span>
-                  Modifiée : {{ t.updatedAt | date:'dd/MM/yyyy HH:mm' }}
+                  Modifiée : {{ task.updatedAt | date:'dd/MM/yyyy HH:mm' }}
                 </span>
               </div>
 
               <div class="actions">
-                <a class="link" [routerLink]="['/tasks', t.id]">Voir</a>
-                <a class="link" [routerLink]="['/tasks', t.id, 'edit']">Modifier</a>
-                <button class="link link--danger" type="button" (click)="delete(t.id)">Supprimer</button>
+                <a class="link" [routerLink]="['/tasks', task.id]">Voir</a>
+                <a class="link" [routerLink]="['/tasks', task.id, 'edit']">Modifier</a>
+                <button class="link link--danger" type="button" (click)="delete(task.id)">Supprimer</button>
               </div>
             </article>
           }
         </div>
       </section>
 
-      <!-- DONE -->
       <section class="col">
         <header class="col__header">
           <div class="col__title">
@@ -137,36 +150,32 @@
             <div class="empty">Aucune tâche.</div>
           }
 
-          @for (t of doneTasks(); track trackById($index, t)) {
+          @for (task of doneTasks(); track trackById($index, task)) {
             <article class="card">
               <div class="card__top">
-                <a
-                  class="card__title card__title--done"
-                  [routerLink]="['/tasks', t.id]"
-                >
-                  {{ t.title }}
+                <a class="card__title card__title--done" [routerLink]="['/tasks', task.id]">
+                  {{ task.title }}
                 </a>
-
                 <span [class]="badgeClass('DONE')">DONE</span>
               </div>
 
-              @if (t.description) {
-                <p class="card__desc">{{ t.description }}</p>
+              @if (task.description) {
+                <p class="card__desc">{{ task.description }}</p>
               }
 
               <div class="meta">
-                <span class="meta__line">Assigné à : <strong>{{ t.user.username }}</strong></span>
+                <span class="meta__line">Assigné à : <strong>{{ task.user.username }}</strong></span>
                 <span class="meta__line">
-                  Créée : {{ t.createdAt | date:'dd/MM/yyyy HH:mm' }}
+                  Créée : {{ task.createdAt | date:'dd/MM/yyyy HH:mm' }}
                   <span class="sep"><br/></span>
-                  Modifiée : {{ t.updatedAt | date:'dd/MM/yyyy HH:mm' }}
+                  Modifiée : {{ task.updatedAt | date:'dd/MM/yyyy HH:mm' }}
                 </span>
               </div>
 
               <div class="actions">
-                <a class="link" [routerLink]="['/tasks', t.id]">Voir</a>
-                <a class="link" [routerLink]="['/tasks', t.id, 'edit']">Modifier</a>
-                <button class="link link--danger" type="button" (click)="delete(t.id)">Supprimer</button>
+                <a class="link" [routerLink]="['/tasks', task.id]">Voir</a>
+                <a class="link" [routerLink]="['/tasks', task.id, 'edit']">Modifier</a>
+                <button class="link link--danger" type="button" (click)="delete(task.id)">Supprimer</button>
               </div>
             </article>
           }

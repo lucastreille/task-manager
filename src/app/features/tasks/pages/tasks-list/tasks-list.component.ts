@@ -1,11 +1,12 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+
 import { TasksService } from '../../../../core/tasks/services/tasks.service';
-import { Task } from '../../../../core/models/task.model';
+import { Task, TaskStatus } from '../../../../core/models/task.model';
 import { getErrorMessage } from '../../../../shared/utils/error-message';
 
-type BoardStatus = 'PENDING' | 'IN_PROGRESS' | 'DONE';
+type FilterType = 'ALL' | 'PENDING' | 'DONE';
 
 @Component({
   selector: 'app-tasks-list',
@@ -15,27 +16,42 @@ type BoardStatus = 'PENDING' | 'IN_PROGRESS' | 'DONE';
   styleUrl: './tasks-list.component.css',
 })
 export class TasksListComponent implements OnInit {
-  private tasksService = inject(TasksService);
+  private readonly tasksService = inject(TasksService);
 
-  tasks = this.tasksService.tasks;
-  loading = this.tasksService.loading;
-  error = this.tasksService.error;
+  readonly tasks = this.tasksService.tasks;
+  readonly loading = this.tasksService.loading;
+  readonly error = this.tasksService.error;
 
-  // ✅ Colonnes façon Jira (tri & group)
+  readonly activeFilter = signal<FilterType>('ALL');
+
+  private readonly filteredTasks = computed(() => {
+    const filter = this.activeFilter();
+    const allTasks = this.tasks();
+
+    switch (filter) {
+      case 'PENDING':
+        return allTasks.filter((t) => t.status === 'PENDING' || t.status === 'IN_PROGRESS');
+      case 'DONE':
+        return allTasks.filter((t) => t.status === 'DONE');
+      default:
+        return allTasks;
+    }
+  });
+
   readonly pendingTasks = computed(() =>
-    this.tasks()
+    this.filteredTasks()
       .filter((t) => t.status === 'PENDING')
       .sort(this.sortByUpdatedDesc)
   );
 
   readonly inProgressTasks = computed(() =>
-    this.tasks()
+    this.filteredTasks()
       .filter((t) => t.status === 'IN_PROGRESS')
       .sort(this.sortByUpdatedDesc)
   );
 
   readonly doneTasks = computed(() =>
-    this.tasks()
+    this.filteredTasks()
       .filter((t) => t.status === 'DONE')
       .sort(this.sortByUpdatedDesc)
   );
@@ -43,14 +59,17 @@ export class TasksListComponent implements OnInit {
   ngOnInit(): void {
     this.tasksService.loadAll().subscribe({
       error: (err: unknown) => {
-        console.log('LOAD TASKS ERROR', err);
         this.tasksService.setError(getErrorMessage(err, 'Impossible de charger les tâches'));
       },
     });
   }
 
-  trackById(_: number, t: Task) {
-    return t.id;
+  setFilter(filter: FilterType): void {
+    this.activeFilter.set(filter);
+  }
+
+  trackById(_: number, task: Task): number {
+    return task.id;
   }
 
   delete(id: number): void {
@@ -58,22 +77,21 @@ export class TasksListComponent implements OnInit {
 
     this.tasksService.remove(id).subscribe({
       error: (err: unknown) => {
-        console.log('DELETE TASK ERROR', err);
         this.tasksService.setError(getErrorMessage(err, 'Suppression impossible'));
       },
     });
   }
 
-  private sortByUpdatedDesc(a: Task, b: Task): number {
-    const ad = new Date(a.updatedAt).getTime();
-    const bd = new Date(b.updatedAt).getTime();
-    return bd - ad;
+  badgeClass(status: TaskStatus): string {
+    const classes: Record<TaskStatus, string> = {
+      DONE: 'badge badge--done',
+      IN_PROGRESS: 'badge badge--progress',
+      PENDING: 'badge badge--todo',
+    };
+    return classes[status];
   }
 
-  // helper pour badge (class css)
-  badgeClass(status: BoardStatus): string {
-    if (status === 'DONE') return 'badge badge--done';
-    if (status === 'IN_PROGRESS') return 'badge badge--progress';
-    return 'badge badge--todo';
+  private sortByUpdatedDesc(a: Task, b: Task): number {
+    return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
   }
 }
