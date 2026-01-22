@@ -4,45 +4,46 @@
   </a>
 
   @if (task(); as t) {
-    <div style="border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 16px;">
-      <div style="display:flex; justify-content:space-between; gap: 12px; align-items:flex-start;">
-        <div>
-          <h2 style="margin: 0 0 8px 0;">{{ t.title }}</h2>
+  <div style="border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 16px;">
+    <div style="display:flex; justify-content:space-between; gap: 12px; align-items:flex-start;">
+      <div>
+        <h2 style="margin: 0 0 8px 0;">{{ t.title }}</h2>
 
-          <span
-            [class]="badgeClass()"
-            style="display:inline-block; padding: 4px 10px; border-radius: 999px; font-size: 12px;"
-          >
-            {{ t.status }}
-          </span>
-        </div>
-
-        <a [routerLink]="['/tasks', t.id, 'edit']">✏️ Modifier</a>
+        <span [class]="badgeClass()"
+          style="display:inline-block; padding: 4px 10px; border-radius: 999px; font-size: 12px;">
+          {{ t.status }}
+        </span>
       </div>
 
-      <hr style="margin: 16px 0; opacity: .2;" />
+      <a [routerLink]="['/tasks', t.id, 'edit']">✏️ Modifier</a>
+    </div>
 
-      <h3 style="margin: 0 0 8px 0;">Description</h3>
-      <p style="margin: 0; white-space: pre-wrap;">{{ t.description || '—' }}</p>
+    <hr style="margin: 16px 0; opacity: .2;" />
 
-      <hr style="margin: 16px 0; opacity: .2;" />
+    <h3 style="margin: 0 0 8px 0;">Description</h3>
+    <p style="margin: 0; white-space: pre-wrap;">{{ t.description || '—' }}</p>
 
-      <div style="font-size: 13px; opacity: .85;">
-        <div>
-          <strong>Assigné à :</strong>
-          <span>{{ t.user.username }}</span>
-        </div>
+    <hr style="margin: 16px 0; opacity: .2;" />
 
-        <div style="margin-top: 8px;">
-          <strong>Créée le :</strong>
-          <span>{{ t.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
-          <span class="sep"><br/></span>
-          <strong>Modifiée le :</strong>
-          <span>{{ t.updatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
-        </div>
+    <div style="font-size: 13px; opacity: .85;">
+      <div>
+        <strong>Assigné à :</strong>
+        <span>{{ t.user.username }}</span>
+      </div>
+
+      <div style="margin-top: 8px;">
+        <strong>Créée le :</strong>
+        <span>{{ t.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+        <span class="sep"><br /></span>
+        <strong>Modifiée le :</strong>
+        <span>{{ t.updatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
       </div>
     </div>
+  </div>
+
+  <!-- Module Commentaires -->
+  <app-comments-list [taskId]="t.id"></app-comments-list>
   } @else {
-    <p>Task introuvable.</p>
+  <p>Task introuvable.</p>
   }
 </section>

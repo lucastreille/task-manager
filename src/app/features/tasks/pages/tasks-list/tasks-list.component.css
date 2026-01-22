@@ -22,6 +22,56 @@
   font-size: 13px;
 }
 
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.filter-bar__label {
+  font-weight: 600;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.filter-bar__buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.filter-btn:hover {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.20);
+}
+
+.filter-btn--active {
+  background: rgba(59, 130, 246, 0.25);
+  border-color: rgba(59, 130, 246, 0.50);
+  color: rgba(255, 255, 255, 0.98);
+}
+
+.filter-btn--active:hover {
+  background: rgba(59, 130, 246, 0.32);
+  border-color: rgba(59, 130, 246, 0.60);
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -135,7 +185,7 @@
 
 .card__title {
   font-weight: 800;
-  text-decoration: none; /* ✅ important: ne bloque pas le barré, car le barré est sur la classe done */
+  text-decoration: none;
   color: inherit;
   line-height: 1.2;
 }

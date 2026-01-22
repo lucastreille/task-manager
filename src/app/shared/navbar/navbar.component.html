@@ -6,8 +6,12 @@
     </a>
 
     <nav class="links">
-      <ng-container *ngIf="isLoggedIn(); else loggedOut">
+      @if (isLoggedIn()) {
+        <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
         <a routerLink="/tasks" routerLinkActive="active">Tasks</a>
+        @if (isAdmin()) {
+          <a routerLink="/users" routerLinkActive="active">Users</a>
+        }
 
         <div class="spacer"></div>
 
@@ -20,13 +24,11 @@
             Logout
           </button>
         </div>
-      </ng-container>
-
-      <ng-template #loggedOut>
+      } @else {
         <div class="spacer"></div>
         <a routerLink="/login" routerLinkActive="active">Login</a>
         <a class="cta" routerLink="/register" routerLinkActive="active">Register</a>
-      </ng-template>
+      }
     </nav>
   </div>
 </header>

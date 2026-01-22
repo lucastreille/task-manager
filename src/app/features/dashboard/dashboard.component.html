@@ -1,0 +1,73 @@
+<div class="dashboard">
+    <div class="dashboard__header">
+        <h1 class="dashboard__title">📊 Dashboard Analytics</h1>
+        <p class="dashboard__subtitle">Vue d'ensemble de vos tâches</p>
+    </div>
+
+    @if (loading()) {
+    <div class="loading">
+        <div class="spinner"></div>
+        <p>Chargement des statistiques...</p>
+    </div>
+    } @else if (error()) {
+    <div class="error-box">
+        <p>{{ error() }}</p>
+        <button class="btn btn--secondary" (click)="navigateToTasks()">
+            Retour aux tâches
+        </button>
+    </div>
+    } @else {
+    <div class="kpi-grid">
+        @if (isAdmin() && totalTasks() !== null) {
+        <div class="kpi-card kpi-card--purple">
+            <div class="kpi-card__icon">📋</div>
+            <div class="kpi-card__content">
+                <h3 class="kpi-card__label">Total des tâches</h3>
+                <p class="kpi-card__value">{{ totalTasks() }}</p>
+                <p class="kpi-card__description">Toutes les tâches du système</p>
+            </div>
+        </div>
+        }
+
+        <div class="kpi-card kpi-card--green">
+            <div class="kpi-card__icon">✅</div>
+            <div class="kpi-card__content">
+                <h3 class="kpi-card__label">Tâches terminées</h3>
+                <p class="kpi-card__value">{{ completedTasks() }}</p>
+                <p class="kpi-card__description">Statut DONE</p>
+            </div>
+        </div>
+
+        <div class="kpi-card kpi-card--blue">
+            <div class="kpi-card__icon">👤</div>
+            <div class="kpi-card__content">
+                <h3 class="kpi-card__label">Mes tâches</h3>
+                <p class="kpi-card__value">{{ myTasks() }}</p>
+                <p class="kpi-card__description">Assignées à {{ username() }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="progress-section">
+        <div class="progress-section__header">
+            <h2 class="progress-section__title">Progression globale</h2>
+            <span class="progress-section__percentage">{{ completionPercentage() }}%</span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-bar__fill" [style.width.%]="completionPercentage()">
+            </div>
+        </div>
+
+        <p class="progress-section__info">
+            {{ completedTasks() }} tâche(s) terminée(s) sur {{ tasks().length }} au total
+        </p>
+    </div>
+
+    <div class="actions">
+        <button class="btn btn--primary" (click)="navigateToTasks()">
+            Voir toutes les tâches
+        </button>
+    </div>
+    }
+</div>

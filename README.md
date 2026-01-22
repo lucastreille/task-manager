@@ -1,59 +1,73 @@
-# TaskManager
+# Task Manager
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.19.
+Application Angular **task-manager** (SPA) avec pages d’authentification, dashboard, tâches et utilisateurs.
 
-## Development server
+---
 
-To start a local development server, run:
+## Démarrer vite
 
+### Prérequis
+- **Node.js** (LTS conseillé)
+- **npm**
+
+### Installer
+```bash
+npm install
+```
+
+### Lancer en local
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+➡️ Ouvre : **http://localhost:4200**
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Routes (URLs après lancement)
 
-```bash
-ng generate component component-name
-```
+Base : `http://localhost:4200`
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+| URL | Écran | Accès |
+|---|---|---|
+| `/login` | LoginComponent | Public |
+| `/register` | RegisterComponent | Public |
+| `/dashboard` | DashboardComponent | Protégé (**authGuard**) |
+| `/tasks` | TasksListComponent | Protégé (**authGuard**) |
+| `/tasks/new` | TaskFormComponent | Protégé (**authGuard**) |
+| `/tasks/:id` | TaskDetailComponent | Protégé (**authGuard**) |
+| `/tasks/:id/edit` | TaskFormComponent | Protégé (**authGuard**) |
+| `/users` | UsersListComponent | Protégé (**authGuard** + **adminGuard**) |
+| `/` | redirect → `/login` | — |
+| `/**` (inconnu) | redirect → `/login` | — |
 
-```bash
-ng generate --help
-```
+> `:id` est un paramètre dynamique (ex: `/tasks/12`, `/tasks/12/edit`).
 
-## Building
+---
 
-To build the project run:
+## Architecture (simple)
 
-```bash
-ng build
-```
+Organisation du code (dans `src/app/`) :
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- `core/` : logique transversale (services, modèles, auth, interceptors)
+  - `core/auth/guards/` : `authGuard`, `adminGuard`
+  - `core/auth/interceptors/` : `auth.interceptor.ts` (injecte le token / gère auth)
+  - `core/*/services/` : services API (tasks/users/comments/auth)
+  - `core/models/` : interfaces / modèles (`Task`, `User`, etc.)
+- `features/` : pages / écrans (fonctionnalités)
+  - `features/auth/` : login + register
+  - `features/dashboard/` : dashboard
+  - `features/tasks/` : liste / détail / formulaire
+  - `features/users/` : liste utilisateurs
+  - `features/comments/` : liste de commentaires
+- `shared/` : composants/utilitaires réutilisables
+  - `shared/navbar/` : navbar
+  - `shared/utils/` : helpers (ex: `error-message.ts`)
 
-## Running unit tests
+### Routing
+Les routes sont définies dans :
+- `src/app/app.routes.ts` (standalone routes Angular)
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Configuration
+- `src/app/app.config.ts` : providers (router, interceptors, etc.)
 
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
